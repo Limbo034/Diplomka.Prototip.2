@@ -510,7 +510,22 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      UIMakeElic_0: 6739805227488600179
+      UIMakeElic_1: 4393342289125814450
+      UIMakeElic_10: 3354079451850169029
+      UIMakeElic_11: 6167018645287112840
+      UIMakeElic_12: -6280268842977680617
+      UIMakeElic_13: 1733465040527299634
+      UIMakeElic_14: -9193660678888405205
+      UIMakeElic_2: -8896019986758687283
+      UIMakeElic_3: 7354478143879418122
+      UIMakeElic_4: -8572191479819761871
+      UIMakeElic_5: 8536090824748679610
+      UIMakeElic_6: -5371525568458155050
+      UIMakeElic_7: -7597933241817776980
+      UIMakeElic_8: -7056294760797485656
+      UIMakeElic_9: -560832943245712570
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
