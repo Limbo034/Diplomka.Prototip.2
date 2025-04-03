@@ -10,7 +10,7 @@ public class Data : ScriptableObject
     public int currentHealth;
     public int countCoins;
     public bool DialogManager;
-    //public List<Gun> guns;
+    public List<Gun> guns;
     public bool itemChachedl;
     public int damage = 1;
     public float destroyBullet = 0.4f;
