@@ -6,21 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
+    path: Assets/ZombieGun/Scenes/Menu.unity
     guid: 1d23435f72cec5241a38adff5e52f43e
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/ZombieGun/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Level.unity
+    path: Assets/ZombieGun/Scenes/Level.unity
     guid: 740262b4d3ac3b84e9008c2d0e4ce7ce
   - enabled: 1
-    path: Assets/Scenes/Testing.unity
+    path: Assets/ZombieGun/Scenes/Testing.unity
     guid: ab5fffdfb29ab974a9a16c17e731ef35
   - enabled: 1
-    path: Assets/Scenes/BossFight.unity
+    path: Assets/ZombieGun/Scenes/BossFight.unity
     guid: fb6a53e94f8e22d4480a3a158ee1dc70
   - enabled: 1
-    path: Assets/Scenes/TheEnd.unity
+    path: Assets/ZombieGun/Scenes/TheEnd.unity
     guid: eb098058e2b866741b1c3c8de5338cc8
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

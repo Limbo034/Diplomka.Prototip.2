@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id">
+  <string name="firebase_database_url" translatable="false">null</string>
+  <string name="gcm_defaultSenderId" translatable="false">1061355376800</string>
+  <string name="google_storage_bucket" translatable="false">diplomkaprototiptwo.firebasestorage.app</string>
+  <string name="project_id" translatable="false">diplomkaprototiptwo</string>
+  <string name="google_api_key" translatable="false">AIzaSyAOT-hRlYAJKrCz_ReqQ4zrX9GnQhGY8hg</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAOT-hRlYAJKrCz_ReqQ4zrX9GnQhGY8hg</string>
+  <string name="google_app_id" translatable="false">1:1061355376800:android:da47a3bf0fa33d2ae8b9c5</string>
+</resources>
