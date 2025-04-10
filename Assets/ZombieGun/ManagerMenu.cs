@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -26,6 +27,11 @@ public class ManagerMenu : MonoBehaviour
     public GameObject profilePanel;
 
     public TMP_Text emailVerificationText;
+
+    [Header("Profile Picture Update Data")]
+    public GameObject profileUpdatePanel;
+    public Image profileImage;
+    public TMP_InputField urlInputField;
     #endregion
 
     #region Unity Lifecycle
@@ -58,7 +64,7 @@ public class ManagerMenu : MonoBehaviour
         loginPanel.SetActive(false);
         registerPanel.SetActive(false);
         emailVerificationPanel.SetActive(false);
-        profilePanel.SetActive(false);
+        profilePanel.SetActive(false); 
     }
 
     public void OpenLoginPanel()
@@ -79,6 +85,11 @@ public class ManagerMenu : MonoBehaviour
         profilePanel.SetActive(true);
     }
 
+    public void OpebClosrProfileUpdatePanel()
+    {
+        profileUpdatePanel.SetActive(!profileUpdatePanel.activeSelf); 
+    }
+
     public void ShowVerificationResponse(bool isEmailSent, string emailid, string errorMessage)
     {
         ClearUI();
@@ -92,6 +103,34 @@ public class ManagerMenu : MonoBehaviour
         {
             emailVerificationText.text = $"Couldn't sent email: {errorMessage}";
         }
+    }
+
+    public void LoadProfileImage(string url)
+    {
+        StartCoroutine(LoadProfileImageIE(url));
+    }
+
+    public IEnumerator LoadProfileImageIE(string url)
+    {
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.LogError(www.error);
+        }
+        else
+        {
+            Texture2D texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2());
+            profileImage.sprite = sprite;
+            profileUpdatePanel.SetActive(false);
+        }
+    }
+
+    public string GetProfileUpdateURL()
+    {
+        return urlInputField.text;
     }
     #endregion
 

@@ -1,7 +1,10 @@
 using Firebase;
 using Firebase.Auth;
+using System;
 using System.Collections;
+using System.Security.Policy;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -27,6 +30,7 @@ public class FirebaseAuthManager : MonoBehaviour
     public TMP_InputField passwordRegisterField;
     public TMP_InputField confirmPasswordRegisterField;
 
+    private string defaultUserImage = "https://icon-icons.com/icon/person-avatar-account-user/191606";
     private void Start()
     {
         StartCoroutine(CheckAndFixDependenciesAsync());
@@ -64,11 +68,16 @@ public class FirebaseAuthManager : MonoBehaviour
         if (auth.CurrentUser != user)
         {
             bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
+
             if (!signedIn && user != null)
             {
                 Debug.Log("Signed out " + user.UserId);
+                ManagerMenu.Instance.OpenLoginPanel();
+                ClearLoginInputFieldText();
             }
+
             user = auth.CurrentUser;
+
             if (signedIn)
             {
                 Debug.Log("Signed in " + user.UserId);
@@ -100,6 +109,11 @@ public class FirebaseAuthManager : MonoBehaviour
             if (user.IsEmailVerified)
             {
                 Debug.Log("AutoLogin User name: " + user.DisplayName);
+
+                if (string.IsNullOrEmpty(user.PhotoUrl.ToString()))
+                {
+                    ManagerMenu.Instance.LoadProfileImage(user.PhotoUrl.ToString());
+                }
             }
 
             else
@@ -112,6 +126,22 @@ public class FirebaseAuthManager : MonoBehaviour
         {
             ManagerMenu.Instance.OpenLoginPanel();
         }
+    }
+    #endregion
+
+    #region Logout
+    public void Logout()
+    {
+        if(auth != null && user != null)
+        {
+            auth.SignOut();
+        }
+    }
+
+    private void ClearLoginInputFieldText() 
+    {
+        emailLoginField.text = ""; 
+        passwordLoginField.text = "";
     }
     #endregion
 
@@ -165,6 +195,11 @@ public class FirebaseAuthManager : MonoBehaviour
             {
                 Debug.Log("In Go Game");
                 ManagerMenu.Instance.OpenProfilePanel();
+
+                if (string.IsNullOrEmpty(user.PhotoUrl.ToString()))
+                {
+                    ManagerMenu.Instance.LoadProfileImage(user.PhotoUrl.ToString());
+                }
             }
             else
             {
@@ -231,7 +266,7 @@ public class FirebaseAuthManager : MonoBehaviour
                 // Get The User After Registration Success
                 user = registerTask.Result.User;
 
-                UserProfile userProfile = new UserProfile { DisplayName = name };
+                UserProfile userProfile = new UserProfile { DisplayName = name, PhotoUrl = new Uri(defaultUserImage)};
 
                 var updateProfileTask = user.UpdateUserProfileAsync(userProfile);
 
@@ -331,5 +366,31 @@ public class FirebaseAuthManager : MonoBehaviour
         }
     }
     #endregion
+
+    private void UpdateProfilePicture()
+    {
+        StartCoroutine(UpdateProfilePictureIE());
+    }
+
+    private IEnumerator UpdateProfilePictureIE()
+    {
+        if (user != null)
+        {
+            string url = ManagerMenu.Instance.GetProfileUpdateURL();
+            UserProfile profile = new UserProfile() { PhotoUrl = new Uri(url) };
+
+            var profileUpdateTask = user.UpdateUserProfileAsync(profile);
+            yield return new WaitUntil(() => profileUpdateTask.IsCompleted);
+
+            if (profileUpdateTask.Exception != null)
+            {
+                Debug.LogError(profileUpdateTask.Exception);
+            }
+            else
+            {
+                ManagerMenu.Instance.LoadProfileImage(user.PhotoUrl.ToString());
+            }
+        }
+    }
 }
 
