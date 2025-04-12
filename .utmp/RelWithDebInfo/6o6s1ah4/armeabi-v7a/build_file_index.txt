@@ -1,0 +1,2 @@
+F:\Diplomca\Diplomka.Prototip.2\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+F:\Diplomca\Diplomka.Prototip.2\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\FramePacing\CMakeLists.txt
