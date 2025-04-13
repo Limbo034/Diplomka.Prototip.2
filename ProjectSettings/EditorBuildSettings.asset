@@ -9,22 +9,22 @@ EditorBuildSettings:
     path: Assets/ZombieGunProject/Scenes/NewMenu.unity
     guid: e99f5d95c4eff2246b93ffaa357a962d
   - enabled: 0
-    path: Assets/ZombieGunTest/Scenes/Menu.unity
+    path: Assets/ZombieGunProject/Scenes/Menu.unity
     guid: 1d23435f72cec5241a38adff5e52f43e
   - enabled: 0
-    path: Assets/ZombieGunTest/Scenes/SampleScene.unity
+    path: Assets/ZombieGunProject/Scenes/1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 0
-    path: Assets/ZombieGunTest/Scenes/Level.unity
+    path: Assets/ZombieGunProject/Scenes/2.unity
     guid: 740262b4d3ac3b84e9008c2d0e4ce7ce
   - enabled: 0
-    path: Assets/ZombieGunTest/Scenes/Testing.unity
+    path: Assets/ZombieGunProject/Scenes/3.unity
     guid: ab5fffdfb29ab974a9a16c17e731ef35
   - enabled: 0
-    path: Assets/ZombieGunTest/Scenes/BossFight.unity
+    path: Assets/ZombieGunProject/Scenes/4.unity
     guid: fb6a53e94f8e22d4480a3a158ee1dc70
   - enabled: 0
-    path: Assets/ZombieGunTest/Scenes/TheEnd.unity
+    path: Assets/ZombieGunProject/Scenes/TheEnd.unity
     guid: eb098058e2b866741b1c3c8de5338cc8
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
