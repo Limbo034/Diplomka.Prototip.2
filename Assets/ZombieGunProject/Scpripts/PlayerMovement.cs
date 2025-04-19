@@ -1,21 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Scripts.UI.JoystickLogic;
 
 public class PlayerMovement : MonoBehaviour
 {
+    //public MobileUI mobileUIController;
+    [Header("Mobile Input")]
+    public Joystick movementJoystick;
     public event EventHandler<OnShootEventsArgs> OnShoot;
-    public class OnShootEventsArgs : EventArgs {
+    public class OnShootEventsArgs : EventArgs
+    {
         public Vector3 gunEndPointPosition;
         public Vector3 shootPosition;
     }
 
     public event EventHandler<OnShootEventsArg> OnShootGranate;
-    public class OnShootEventsArg : EventArgs {
+    public class OnShootEventsArg : EventArgs
+    {
         public Vector3 PlayerEndPointPosition;
         public Vector3 shootPosition;
     }
@@ -52,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform aimGranatePos;
     public int currentGun;
     public int patrons;
-    private int numberGranate;
+    private int numberGranate = 0;
 
 
     //LogicalCheck
@@ -90,9 +92,17 @@ public class PlayerMovement : MonoBehaviour
         patrons = 9;
         weapon.SortGun(currentGun);
         numberGranate = data.GranateCount;
+        if (data == null)
+            data = FindObjectOfType<Data>();
+
+        if (Granade == null)
+        {
+            Granade = gameObject.AddComponent<AudioSource>();
+            Granade.clip = Resources.Load<AudioClip>("Sounds/musket-explosion-6383");
+        }
     }
 
-    public void SpeedInc() 
+    public void SpeedInc()
     {
         if (data.countCoins < 20)
             return;
@@ -153,11 +163,11 @@ public class PlayerMovement : MonoBehaviour
     //Dashing---------------------------------------------------------------------
     private void CheckInput()
     {
-        if (Input.GetMouseButtonDown(1))
+        /*if (Input.GetMouseButtonDown(1))
         {
             if (Time.time >= (lastDash + dashCoolDown))
                 AttemptToDash();
-        }
+        }*/
     }
 
     private void AttemptToDash()
@@ -179,10 +189,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (movementInput == Vector2.zero)
                     dashDirection = LocalshooTing;
-                else 
+                else
                     dashDirection = movementInput;
                 canMove = false;
-                rb.MovePosition(rb.position + dashDirection * dashSpeed * curve.Evaluate(Mathf.Cos((dashTiem - dashTimeLeft) * Mathf.PI/2)));
+                rb.MovePosition(rb.position + dashDirection * dashSpeed * curve.Evaluate(Mathf.Cos((dashTiem - dashTimeLeft) * Mathf.PI / 2)));
                 dashTimeLeft -= Time.deltaTime;
             }
 
@@ -205,18 +215,18 @@ public class PlayerMovement : MonoBehaviour
     //Movement---------------------------------------------------------------------
     private void TurnPlayer()
     {
-        if (shooTing.x < transform.position.x && !facingRight)
-        {
-            Flip();
-            facingDirect = -1;
-        }
-        else if (shooTing.x > transform.position.x && facingRight)
+        if (horizontalValue > 0.1f && facingRight)
         {
             Flip();
             facingDirect = 1;
         }
+        else if (horizontalValue < -0.1f && !facingRight)
+        {
+            Flip();
+            facingDirect = -1;
+        }
     }
- 
+
     private void Flip()
     {
         facingRight = !facingRight;
@@ -225,8 +235,9 @@ public class PlayerMovement : MonoBehaviour
 
     void ProcessInputs()
     {
-        horizontalValue = Input.GetAxisRaw("Horizontal");
-        verticalValue = Input.GetAxisRaw("Vertical");
+        horizontalValue = movementJoystick.Horizontal;
+        verticalValue = movementJoystick.Vertical;
+
         movementInput = new Vector2(horizontalValue, verticalValue);
         movementSpeed = Mathf.Clamp(movementInput.magnitude, 0.0f, 1.0f);
 
@@ -248,7 +259,7 @@ public class PlayerMovement : MonoBehaviour
     {
         timebet -= Time.deltaTime;
         timebetGranate -= Time.deltaTime;
-        if (Input.GetMouseButtonDown(0) && timebet < 0 && weaponPatrons > 0)
+        if (false && Input.GetMouseButtonDown(0) && timebet < 0 && weaponPatrons > 0)
         {
             timebet = timebetTime;
             Vector3 mousePosition = shooTing;
@@ -258,9 +269,10 @@ public class PlayerMovement : MonoBehaviour
             weaponPatrons--;
             shootSound.Play();
             gunLight[currentGun].SetActive(true);
-            
-            OnShoot?.Invoke(this, new OnShootEventsArgs {
-                gunEndPointPosition = aimGunEndPosintTransform[currentGun].position, 
+
+            OnShoot?.Invoke(this, new OnShootEventsArgs
+            {
+                gunEndPointPosition = aimGunEndPosintTransform[currentGun].position,
                 shootPosition = mousePosition,
             });
         }
@@ -274,18 +286,19 @@ public class PlayerMovement : MonoBehaviour
             countGranates.text = numberGranate.ToString();
             GranadeExplosion();
 
-            OnShootGranate?.Invoke(this, new OnShootEventsArg {
+            OnShootGranate?.Invoke(this, new OnShootEventsArg
+            {
                 PlayerEndPointPosition = aimGranatePos.position,
                 shootPosition = mousePosition,
             });
         }
 
-        if (weaponPatrons <= 0 && Input.GetMouseButtonDown(0) && !ActualReload)
+        /*if (weaponPatrons <= 0 && Input.GetMouseButtonDown(0) && !ActualReload)
         {
             RealodAnim.SetTrigger("Patrons");
             ActualReload = true;
             Reload.Play();
-        }
+        }*/
 
         if (timebet < 0)
         {
@@ -296,28 +309,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void GranadeExplosion() => Granade.Play();
 
-    public void NewPatrons() 
+    public void NewPatrons()
     {
         weaponPatrons = patrons;
         ActualReload = false;
     }
 
-    void AimWork() 
-    { 
+    void AimWork()
+    {
         shooTing = Aim.transform.position;
 
         LocalshooTing = Aim.transform.localPosition;
         LocalshooTing.Normalize();
         LocalshooTing = new Vector2(facingDirect * LocalshooTing.x, LocalshooTing.y);
     }
+    public void Interact()
+    {
 
+    }
     public void ItemChanged()
     {
         Gun receivedItem = inventoryManager.GetSelectedItem();
         if (receivedItem != null)
         {
             Debug.Log(receivedItem);
-            switch(receivedItem.name)
+            switch (receivedItem.name)
             {
                 case "Pistol":
                     currentGun = 0;
@@ -351,5 +367,74 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //---------------------------------------------------------------------
+    public void MobileDash()
+    {
+        if (Time.time >= (lastDash + dashCoolDown))
+            AttemptToDash();
+    }
 
+    public void MobileShoot()
+    {
+        if (timebet < 0 && weaponPatrons > 0)
+        {
+            // Автоприцеливание
+            Transform closestEnemy = FindClosestEnemy();
+            if (closestEnemy != null)
+            {
+                shooTing = closestEnemy.position;
+                Aim.transform.position = shooTing;
+            }
+
+            timebet = timebetTime;
+            Vector3 mousePosition = shooTing;
+
+            aimAnimator[currentGun].SetTrigger("ShootPistol");
+            cam.SetBool("ShootCam", true);
+            weaponPatrons--;
+            shootSound.Play();
+            gunLight[currentGun].SetActive(true);
+
+            OnShoot?.Invoke(this, new OnShootEventsArgs
+            {
+                gunEndPointPosition = aimGunEndPosintTransform[currentGun].position,
+                shootPosition = mousePosition,
+            });
+        }
+    }
+    private Transform FindClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Zombie");
+        Transform closest = null;
+        float minDistance = Mathf.Infinity;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float distance = Vector2.Distance(transform.position, enemy.transform.position);
+            if (distance < minDistance)
+            {
+                closest = enemy.transform;
+                minDistance = distance;
+            }
+        }
+        return closest;
+    }
+    public void MobileGrenade()
+    {
+        if (true/*numberGranate > 0 && timebetGranate < 0*/)
+        {
+            timebetGranate = timebetTimeGranate;
+            Vector3 mousePosition = shooTing;
+
+            numberGranate--;
+            if (countGranates != null)
+                countGranates.text = numberGranate.ToString();
+            GranadeExplosion();
+
+            OnShootGranate?.Invoke(this, new OnShootEventsArg
+            {
+                PlayerEndPointPosition = aimGranatePos.position,
+                shootPosition = mousePosition,
+            });
+        }
+    }
 }

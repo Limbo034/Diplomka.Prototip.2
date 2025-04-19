@@ -32,6 +32,10 @@ public class ManagerMenu : MonoBehaviour
     public GameObject profileUpdatePanel;
     public Image profileImage;
     public TMP_InputField urlInputField;
+
+    [Header("Game")]
+    public GameObject GameMenuPanelInfo;
+    public GameObject GameMenuPanelRules;
     #endregion
 
     #region Unity Lifecycle
@@ -39,11 +43,6 @@ public class ManagerMenu : MonoBehaviour
     public void Awake()
     {
         CreateInstance();
-    }
-
-    private void Update()
-    {
-        HandleInput();
     }
 
     #endregion
@@ -166,45 +165,14 @@ public class ManagerMenu : MonoBehaviour
     #endregion
 
     #region Input Handling
-    private void HandleInput()
+    public void HandleLKey()
     {
-        HandleCheatKeys();
-        HandleEscapeKey();
-        HandleLKey();
-    }
-
-    private void HandleCheatKeys()
-    {
-        if (Input.GetKeyDown(KeyCode.RightShift))
+        if (rule != null)
         {
-            data.countFuel = 0;
-            data.countCoins = 0;
-            data.DialogManager = false;
-            LoadLevel(SceneManager.GetActiveScene().buildIndex);
+            Time.timeScale = 1;
+            rule.onClick.Invoke();
         }
-    }
 
-    private void HandleEscapeKey()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (info != null)
-            {
-                info.onClick.Invoke();
-            }
-        }
-    }
-
-    private void HandleLKey()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if (rule != null)
-            {
-                Time.timeScale = 1;
-                rule.onClick.Invoke();
-            }
-        }
     }
     #endregion
 }
